@@ -1,6 +1,4 @@
 
-
-
 ## 1. Validation Results Summary
 
 | Validation Area | Specific Check | Result | Notes / Evidence |

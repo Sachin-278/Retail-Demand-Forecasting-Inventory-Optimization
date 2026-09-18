@@ -1,5 +1,5 @@
 -- Check for invalid or unexpected state and category values
-s
+
 SELECT DISTINCT state_id, cat_id
 FROM `fresh-yen-508710-a0.m5_raw.sales_train_validation`
 WHERE state_id NOT IN ('CA', 'TX', 'WI')
