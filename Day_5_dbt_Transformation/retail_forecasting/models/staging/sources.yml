@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: m5_raw
+    database: fresh-yen-508710-a0
+    schema: m5_raw
+    description: "Raw M5 retail demand tables loaded into BigQuery."
+    tables:
+      - name: Calendar
+      - name: sales_train_validation
+      - name: sales_train_evaluation
+      - name: sell_prices
+      - name: sample_submission

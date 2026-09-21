@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: stg_sales_long
+    description: "M5 sales converted from wide daily columns into one row per item/store/day."
+    columns:
+      - name: id
+        tests:
+          - not_null
+      - name: item_id
+        tests:
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+      - name: sales_day
+        tests:
+          - not_null
+      - name: sales_quantity
+        tests:
+          - not_null
+
+  - name: int_daily_sales
+    description: "Daily item-store sales joined to the M5 calendar date."
+    columns:
+      - name: item_id
+        tests:
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+      - name: date
+        tests:
+          - not_null
+
+  - name: int_weekly_sales
+    description: "Weekly sales aggregation by item and store."
+    columns:
+      - name: week_start
+        tests:
+          - not_null
+
+  - name: int_monthly_sales
+    description: "Monthly sales aggregation by item and store."
+    columns:
+      - name: month_start
+        tests:
+          - not_null
+
+  - name: forecasting_input
+    description: "Denormalized daily sales, calendar and price dataset for forecasting models."
+    columns:
+      - name: item_id
+        tests:
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+      - name: date
+        tests:
+          - not_null
+      - name: sales_quantity
+        tests:
+          - not_null
