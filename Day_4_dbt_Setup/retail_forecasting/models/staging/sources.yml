@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: m5_raw
+    database: fresh-yen-508710-a0
+    schema: m5_raw
+    description: "Raw M5 retail demand forecasting tables loaded into BigQuery."
+
+    tables:
+      - name: Calendar
+        description: "M5 calendar and event information."
+
+      - name: sales_train_validation
+        description: "Historical item-store daily sales used for validation-period forecasting."
+
+      - name: sales_train_evaluation
+        description: "M5 evaluation-period sales table."
+
+      - name: sell_prices
+        description: "Weekly item-store selling prices."
+
+      - name: sample_submission
+        description: "M5 sample submission template."

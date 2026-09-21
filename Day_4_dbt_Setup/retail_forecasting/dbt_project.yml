@@ -1,0 +1,16 @@
+name: 'retail_forecasting'
+version: '1.0.0'
+config-version: 2
+
+profile: 'retail_forecasting'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+snapshot-paths: ["snapshots"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+models:
+  retail_forecasting:
+    staging:
+      +materialized: view
