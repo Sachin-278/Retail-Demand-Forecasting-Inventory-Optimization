@@ -20,6 +20,15 @@ models:
         tests:
           - not_null
 
+  - name: stg_calendar
+    description: "Staging view containing M5 calendar dates, week information, events, and SNAP indicators."
+
+  - name: stg_sell_prices
+    description: "Staging view containing item-store weekly selling prices after filtering invalid and non-positive prices."
+
+  - name: stg_sales_validation
+    description: "Staging view containing the M5 sales validation dataset used as a source for sales data."
+
   - name: int_daily_sales
     description: "Daily item-store sales joined to the M5 calendar date."
     columns:
