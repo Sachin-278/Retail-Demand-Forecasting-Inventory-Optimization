@@ -1,4 +1,4 @@
-{{ config(materialized='table') }}
+{{ config(materialized='view') }}
 
 -- Clean, denormalized daily dataset for the forecasting layer.
 -- This joins sales, calendar attributes, and price without creating
