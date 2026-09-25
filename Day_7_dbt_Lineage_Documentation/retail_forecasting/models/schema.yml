@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_sales_long
+    description: "M5 sales converted from wide daily columns into long daily records."
+    columns:
+      - name: id
+        description: "Product-store series identifier."
+      - name: item_id
+        description: "M5 item identifier."
+      - name: dept_id
+        description: "M5 department identifier."
+      - name: cat_id
+        description: "M5 category identifier."
+      - name: store_id
+        description: "M5 store identifier."
+      - name: state_id
+        description: "M5 state identifier."
+      - name: sales_day
+        description: "Original M5 day column such as d_1."
+      - name: day_number
+        description: "Numeric day extracted from the M5 day column."
+      - name: sales_quantity
+        description: "Observed unit sales."
+
+  - name: stg_calendar
+    description: "Calendar dates, week identifiers, weekday/month/year attributes, events and SNAP indicators."
+
+  - name: stg_sell_prices
+    description: "Item/store/week selling price staging model."
+
+  - name: int_daily_sales
+    description: "Daily item-store sales joined to the M5 calendar date."
+
+  - name: int_weekly_sales
+    description: "Weekly item-store sales aggregation."
+
+  - name: int_monthly_sales
+    description: "Monthly item-store sales aggregation."
+
+  - name: forecasting_input
+    description: "Denormalized forecasting mart combining sales, calendar attributes and price."
