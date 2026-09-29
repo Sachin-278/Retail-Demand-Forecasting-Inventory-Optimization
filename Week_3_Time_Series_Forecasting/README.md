@@ -1,46 +1,43 @@
 # Week 3: Time-Series Forecasting
 
-This folder implements the Week 3 forecasting steps against the Day 6 BigQuery
-`forecasting_input` view. It creates a 28-day category/store Prophet forecast and,
-when an item is selected, a recursive item/store LightGBM forecast.
+This module consumes the `forecasting_input` mart produced by the Day 5/6 dbt project.
 
-## Setup
+## Models
 
-From the repository root, install the forecasting dependencies and authenticate
-with the Google account that has BigQuery access:
+- `forecast_prophet_aggregates` fits a Prophet model for each state/department aggregate, using M5 event dates as holiday regressors. It returns point forecasts and Prophet uncertainty bounds.
+- `train_lightgbm` builds one pooled item-store model using 7/28-day lags, rolling statistics, calendar fields, event/SNAP flags, selling price, and available hierarchy IDs.
+- `forecast_lightgbm` recursively predicts each item-store series. Pass `future_features` with known future prices, event names, and SNAP flags to improve forecasts; absent future covariates default to the last known price and no event/SNAP flag.
+- `evaluate_lightgbm` uses a time-ordered holdout and reports MAE, RMSE, and WAPE without training on future target values.
+- `evaluate_prophet_aggregates` evaluates state/department forecasts on the same time-ordered holdout.
+- `write_forecasts_to_bigquery` appends future forecasts and held-out predictions (with actual quantities) to a BigQuery table with optional bounds, model name, and generation timestamp.
+- `write_metrics_to_bigquery` appends each model's holdout horizon, MAE, RMSE, WAPE, and evaluated row count to `dbt_dev_sachin.forecast_metrics`.
+
+The CLI defaults to a deterministic sample of 100 item-store series to keep local runtime and BigQuery query costs bounded. Increase `--max-series` to scale up, or set it to `0` to process the full mart; the full M5 mart can require substantial memory and compute.
+
+## Run from VS Code
+
+Activate the repository virtual environment and authenticate as a Google account with BigQuery Job User, BigQuery Data Viewer on `m5_raw`, and BigQuery Data Editor on `dbt_dev_sachin`:
 
 ```powershell
-python -m pip install -r Week_3_Time_Series_Forecasting/requirements.txt
 gcloud auth application-default login
+python -m pip install -r Week_3_Time_Series_Forecasting/requirements.txt
+python Week_3_Time_Series_Forecasting/forecast.py --horizon 28 --max-series 100
 ```
 
-## Run
-
-Generate an aggregate forecast for one store/category:
+Override the mart/output table names as needed:
 
 ```powershell
-python Week_3_Time_Series_Forecasting/forecast.py --store CA_1 --category FOODS
+python Week_3_Time_Series_Forecasting/forecast.py `
+  --input-table fresh-yen-508710-a0.dbt_dev_sachin.forecasting_input `
+  --output-table dbt_dev_sachin.forecasts `
+  --horizon 28 `
+  --max-series 100
 ```
 
-Include the LightGBM item/store model by specifying an item ID:
+## Test
 
 ```powershell
-python Week_3_Time_Series_Forecasting/forecast.py --store CA_1 --category FOODS --item FOODS_1_001
+python -m unittest discover -s Week_3_Time_Series_Forecasting/tests -v
 ```
 
-The default output is `forecasts.csv` in the current directory. To also append
-results to `fresh-yen-508710-a0.dbt_dev_sachin.forecasts`, add
-`--write-bigquery`. The BigQuery option needs create-table/write access to the
-output dataset. The script reads historical features from
-`dbt_dev_sachin.forecasting_input` and future dates/prices from `m5_raw.Calendar`
-and `m5_raw.sell_prices`.
-
-The Prophet interval columns are model-generated uncertainty intervals. The
-LightGBM point forecast does not claim prediction intervals and leaves those
-columns empty. Its future lag features are generated recursively from earlier
-predictions, and future selling prices use the M5 price for the relevant week;
-when no future-week price is available, the last observed item price is used.
-
-This is a scoped starter pipeline, not a claim of validated forecast accuracy.
-Evaluate against a time-based holdout and tune at the required store/item scale
-before using the output for inventory decisions.
+The CLI requires BigQuery Job User and Service Usage Consumer on the query project, Data Viewer on `m5_raw`, and Data Editor on the output dataset. Live execution also requires ADC credentials configured for the same Google account that has those roles.
