@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -9,6 +10,8 @@ from forecast import (
     forecast_accuracy,
     forecast_lightgbm,
     train_lightgbm,
+    write_forecasts_to_bigquery,
+    write_metrics_to_bigquery,
 )
 
 
@@ -88,6 +91,43 @@ class ForecastFeatureTests(unittest.TestCase):
         self.assertEqual(metrics["rmse"], 2.0)
         self.assertAlmostEqual(metrics["wape"], 4 / 30)
         self.assertEqual(metrics["evaluated_rows"], 2.0)
+
+    @patch("pandas_gbq.to_gbq")
+    def test_forecast_writer_appends_actuals_predictions_and_timestamp(self, to_gbq):
+        forecasts = pd.DataFrame(
+            {
+                "item_id": ["item_a"],
+                "store_id": ["store_1"],
+                "date": [pd.Timestamp("2024-01-01")],
+                "actual_quantity": [10],
+                "forecast_quantity": [12],
+                "forecast_lower": [9],
+                "forecast_upper": [14],
+                "model_name": ["lightgbm_global_holdout"],
+            }
+        )
+
+        write_forecasts_to_bigquery(forecasts)
+
+        written, = to_gbq.call_args.args
+        self.assertEqual(to_gbq.call_args.kwargs["destination_table"], "dbt_dev_sachin.forecasts")
+        self.assertEqual(to_gbq.call_args.kwargs["project_id"], "fresh-yen-508710-a0-509416")
+        self.assertEqual(to_gbq.call_args.kwargs["if_exists"], "append")
+        self.assertEqual(written.loc[0, "actual_quantity"], 10.0)
+        self.assertEqual(written.loc[0, "forecast_quantity"], 12.0)
+        self.assertIn("generated_at", written.columns)
+
+    @patch("pandas_gbq.to_gbq")
+    def test_metrics_writer_appends_metrics_with_evaluation_timestamp(self, to_gbq):
+        metrics = [{"model_name": "lightgbm_global", "mae": 1.5, "rmse": 2.0, "wape": 0.1}]
+
+        write_metrics_to_bigquery(metrics)
+
+        written, = to_gbq.call_args.args
+        self.assertEqual(to_gbq.call_args.kwargs["destination_table"], "dbt_dev_sachin.forecast_metrics")
+        self.assertEqual(to_gbq.call_args.kwargs["if_exists"], "append")
+        self.assertEqual(written.loc[0, "mae"], 1.5)
+        self.assertIn("evaluated_at", written.columns)
 
 
 if __name__ == "__main__":

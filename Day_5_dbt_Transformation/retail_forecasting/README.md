@@ -16,7 +16,8 @@ This package continues the Retail Demand Forecasting & Inventory Optimization pr
    - calendar attributes
    - event fields
    - SNAP indicators
-6. Adds basic dbt schema tests for important fields.
+6. Builds a dashboard-oriented `reporting_sales_daily` mart aggregated by date, store, category, and department.
+7. Adds dbt schema tests for important fields.
 
 ## Expected dbt flow
 
@@ -24,7 +25,7 @@ Raw M5 tables
 → staging models
 → `int_daily_sales`
 → weekly/monthly aggregation
-→ `forecasting_input`
+→ `forecasting_input` → `reporting_sales_daily`
 → Week 3 forecasting models
 
 ## Folder structure
@@ -45,12 +46,13 @@ retail_forecasting/
 │   │   ├── int_weekly_sales.sql
 │   │   └── int_monthly_sales.sql
 │   └── marts/
-│       └── forecasting_input.sql
+│       ├── forecasting_input.sql
+│       └── reporting_sales_daily.sql
 └── README.md
 ```
 
 ## Important
 
-- The project is configured for BigQuery project `fresh-yen-508710-a0` and dataset `m5_raw`, matching the existing raw setup.
+- The project is configured for BigQuery project `fresh-yen-508710-a0-509416` and dataset `m5_raw`, matching the existing raw setup.
 - Do not upload BigQuery credentials or `profiles.yml` to GitHub.
 - This package is prepared for the project structure; it has not been executed against the user's live BigQuery environment here. Run dbt in the configured environment before claiming runtime success.

@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: m5_raw
-    database: fresh-yen-508710-a0
+    database: fresh-yen-508710-a0-509416
     schema: m5_raw
     description: "Raw M5 retail demand tables loaded into BigQuery."
     tables:

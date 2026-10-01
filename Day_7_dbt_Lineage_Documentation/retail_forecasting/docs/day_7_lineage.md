@@ -10,6 +10,7 @@ Raw M5 tables
 → daily sales transformation
 → weekly/monthly aggregations
 → forecasting_input
+→ reporting_sales_daily
 → Week 3 forecasting models
 
 ### Main dependencies
@@ -21,6 +22,7 @@ Raw M5 tables
 - `int_daily_sales` → `forecasting_input`
 - `stg_calendar` → `forecasting_input`
 - `stg_sell_prices` → `forecasting_input`
+- `forecasting_input` → `reporting_sales_daily`
 
 ## Why lineage matters
 

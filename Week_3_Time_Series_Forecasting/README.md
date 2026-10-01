@@ -12,6 +12,32 @@ This module consumes the `forecasting_input` mart produced by the Day 5/6 dbt pr
 - `write_forecasts_to_bigquery` appends future forecasts and held-out predictions (with actual quantities) to a BigQuery table with optional bounds, model name, and generation timestamp.
 - `write_metrics_to_bigquery` appends each model's holdout horizon, MAE, RMSE, WAPE, and evaluated row count to `dbt_dev_sachin.forecast_metrics`.
 
+## Day 7: Store and Monitor Forecasts
+
+Running the CLI writes two append-only tables:
+
+- `fresh-yen-508710-a0-509416.dbt_dev_sachin.forecasts`: item/store or state/department, date, actual quantity when evaluating a holdout, forecast quantity, Prophet interval bounds when available, model name, and `generated_at`.
+- `fresh-yen-508710-a0-509416.dbt_dev_sachin.forecast_metrics`: model name, horizon, MAE, RMSE, WAPE, evaluated row count, and `evaluated_at`.
+
+The forecast table is append-only so each run remains available for audit. Week 4 dashboard queries should select the latest generation per model and series, for example:
+
+```sql
+SELECT *
+FROM `fresh-yen-508710-a0-509416.dbt_dev_sachin.forecasts`
+WHERE item_id IS NOT NULL
+QUALIFY generated_at = MAX(generated_at) OVER (
+  PARTITION BY model_name, item_id, store_id
+)
+```
+
+Review the latest backtest metrics with:
+
+```sql
+SELECT *
+FROM `fresh-yen-508710-a0-509416.dbt_dev_sachin.forecast_metrics`
+QUALIFY evaluated_at = MAX(evaluated_at) OVER (PARTITION BY model_name)
+```
+
 The CLI defaults to a deterministic sample of 100 item-store series to keep local runtime and BigQuery query costs bounded. Increase `--max-series` to scale up, or set it to `0` to process the full mart; the full M5 mart can require substantial memory and compute.
 
 ## Run from VS Code
@@ -28,7 +54,7 @@ Override the mart/output table names as needed:
 
 ```powershell
 python Week_3_Time_Series_Forecasting/forecast.py `
-  --input-table fresh-yen-508710-a0.dbt_dev_sachin.forecasting_input `
+  --input-table fresh-yen-508710-a0-509416.dbt_dev_sachin.forecasting_input `
   --output-table dbt_dev_sachin.forecasts `
   --horizon 28 `
   --max-series 100

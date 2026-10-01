@@ -71,3 +71,19 @@ models:
       - name: sales_quantity
         tests:
           - not_null
+
+  - name: reporting_sales_daily
+    description: "Daily store/category/department totals for dashboard reporting, derived from forecasting_input."
+    columns:
+      - name: date
+        tests:
+          - not_null
+      - name: store_id
+        tests:
+          - not_null
+      - name: total_sales_quantity
+        tests:
+          - not_null
+      - name: item_count
+        tests:
+          - not_null

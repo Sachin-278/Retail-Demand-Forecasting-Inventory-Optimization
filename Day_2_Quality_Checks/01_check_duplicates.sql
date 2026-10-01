@@ -2,7 +2,7 @@
 SELECT 
   date, 
   COUNT(*) as duplicate_count
-FROM `fresh-yen-508710-a0.m5_raw.Calendar`
+FROM `fresh-yen-508710-a0-509416.m5_raw.Calendar`
 GROUP BY date
 HAVING COUNT(*) > 1;
 
@@ -12,7 +12,7 @@ SELECT
   item_id, 
   wm_yr_wk, 
   COUNT(*) as duplicate_count
-FROM `fresh-yen-508710-a0.m5_raw.sell_prices`
+FROM `fresh-yen-508710-a0-509416.m5_raw.sell_prices`
 GROUP BY store_id, item_id, wm_yr_wk
 HAVING COUNT(*) > 1;
 
@@ -20,7 +20,7 @@ HAVING COUNT(*) > 1;
 SELECT 
   id, 
   COUNT(*) as duplicate_count
-FROM `fresh-yen-508710-a0.m5_raw.sales_train_validation`
+FROM `fresh-yen-508710-a0-509416.m5_raw.sales_train_validation`
 GROUP BY id
 HAVING COUNT(*) > 1;
 
@@ -28,7 +28,7 @@ HAVING COUNT(*) > 1;
 SELECT 
   id, 
   COUNT(*) as duplicate_count
-FROM `fresh-yen-508710-a0.m5_raw.sales_train_evaluation`
+FROM `fresh-yen-508710-a0-509416.m5_raw.sales_train_evaluation`
 GROUP BY id
 HAVING COUNT(*) > 1;
 
@@ -36,6 +36,6 @@ HAVING COUNT(*) > 1;
 SELECT 
   id, 
   COUNT(*) as duplicate_count
-FROM `fresh-yen-508710-a0.m5_raw.sample_submission`
+FROM `fresh-yen-508710-a0-509416.m5_raw.sample_submission`
 GROUP BY id
 HAVING COUNT(*) > 1;

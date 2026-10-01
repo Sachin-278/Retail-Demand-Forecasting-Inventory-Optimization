@@ -381,7 +381,7 @@ def evaluate_prophet_aggregates(
 def write_forecasts_to_bigquery(
     forecasts: pd.DataFrame,
     destination: str = "dbt_dev_sachin.forecasts",
-    project_id: str = "fresh-yen-508710-a0",
+    project_id: str = "fresh-yen-508710-a0-509416",
 ) -> None:
     """Append forecasts to BigQuery using the caller's Google credentials."""
     if forecasts.empty:
@@ -406,7 +406,7 @@ def write_forecasts_to_bigquery(
 def write_metrics_to_bigquery(
     metrics: Sequence[dict[str, object]],
     destination: str = "dbt_dev_sachin.forecast_metrics",
-    project_id: str = "fresh-yen-508710-a0",
+    project_id: str = "fresh-yen-508710-a0-509416",
 ) -> None:
     """Append model holdout metrics for longitudinal forecast monitoring."""
     if not metrics:
@@ -428,7 +428,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Train Week 3 models and store forecasts in BigQuery.")
     parser.add_argument(
         "--input-table",
-        default="fresh-yen-508710-a0.dbt_dev_sachin.forecasting_input",
+        default="fresh-yen-508710-a0-509416.dbt_dev_sachin.forecasting_input",
         help="Fully-qualified BigQuery table containing the forecasting input mart.",
     )
     parser.add_argument("--output-table", default="dbt_dev_sachin.forecasts")
@@ -463,7 +463,7 @@ def main() -> None:
         JOIN selected_series USING (item_id, store_id)
         ORDER BY input.item_id, input.store_id, input.date
         """,
-        project_id="fresh-yen-508710-a0",
+        project_id="fresh-yen-508710-a0-509416",
         dialect="standard",
     )
     if data.empty:

@@ -7,7 +7,7 @@ This folder starts the Week 2 dbt phase.
 ## BigQuery configuration
 
 Project:
-`fresh-yen-508710-a0`
+`fresh-yen-508710-a0-509416`
 
 Raw dataset:
 `m5_raw`
@@ -29,7 +29,7 @@ Do not upload local Google credentials or `profiles.yml` to GitHub.
 
 The local dbt profile should point to:
 
-- project: `fresh-yen-508710-a0`
+- project: `fresh-yen-508710-a0-509416`
 - dataset: `m5_dbt`
 - method: OAuth
 - location: US

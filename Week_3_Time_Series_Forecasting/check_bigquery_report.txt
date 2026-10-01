@@ -1,0 +1,56 @@
+== Python packages ==
+pandas-gbq: 0.35.2
+google-cloud-bigquery: 3.45.2
+google-auth: 2.58.0
+db-dtypes: 1.7.1
+pandas: 3.0.6
+lightgbm: 4.7.0
+prophet: 1.4.0
+
+== Application Default Credentials (ADC) ==
+C:\Users\sachi\AppData\Roaming\gcloud\application_default_credentials.json: EXISTS
+C:\Users\sachi\.config\gcloud\application_default_credentials.json: missing
+
+== Local forecast artifacts (csv/parquet/pkl/joblib) ==
+None found - forecasts are only produced in-memory and written straight to BigQuery
+
+== BigQuery datasets and tables ==
+
+fresh-yen-508710-a0-509416.m5_raw: 5 table(s)
+            table_name table_type
+              Calendar BASE TABLE
+sales_train_evaluation BASE TABLE
+sales_train_validation BASE TABLE
+     sample_submission BASE TABLE
+           sell_prices BASE TABLE
+
+fresh-yen-508710-a0-509416.dbt_dev_sachin: 11 table(s)
+           table_name table_type
+     forecast_metrics BASE TABLE
+    forecasting_input       VIEW
+            forecasts BASE TABLE
+      int_daily_sales BASE TABLE
+    int_monthly_sales BASE TABLE
+     int_weekly_sales BASE TABLE
+reporting_sales_daily       VIEW
+         stg_calendar       VIEW
+       stg_sales_long       VIEW
+ stg_sales_validation       VIEW
+      stg_sell_prices       VIEW
+
+-- fresh-yen-508710-a0-509416.dbt_dev_sachin.forecasts --
+               model_name  row_count   min_date   max_date                last_generated_at  distinct_runs
+          lightgbm_global       8400 2016-04-25 2016-05-22 2026-10-01 16:25:54.268558+00:00              3
+  lightgbm_global_holdout       8400 2016-03-28 2016-04-24 2026-10-01 16:25:54.268558+00:00              3
+        prophet_aggregate       1596 2016-04-25 2016-05-22 2026-10-01 16:25:54.268558+00:00              3
+prophet_aggregate_holdout       1596 2016-03-28 2016-04-24 2026-10-01 16:25:54.268558+00:00              3
+Forecast row completeness per run:
+                    generated_at  uploaded_rows  series   min_date   max_date  distinct_dates
+2026-10-01 14:37:35.415050+00:00           6664     119 2016-03-28 2016-05-22              56
+2026-10-01 16:15:13.776949+00:00           6664     119 2016-03-28 2016-05-22              56
+2026-10-01 16:25:54.268558+00:00           6664     119 2016-03-28 2016-05-22              56
+
+-- fresh-yen-508710-a0-509416.dbt_dev_sachin.forecast_metrics --
+       model_name  row_count                last_evaluated_at
+  lightgbm_global          2 2026-10-01 16:26:01.167364+00:00
+prophet_aggregate          2 2026-10-01 16:26:01.167364+00:00
