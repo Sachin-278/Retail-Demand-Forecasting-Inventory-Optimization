@@ -197,26 +197,47 @@ selected_historical["date"] = pd.to_datetime(
 
 st.subheader("Demand Overview")
 
-col1, col2, col3 = st.columns(3)
+# Calculate forecast KPIs
+forecast_days = selected_forecast["date"].nunique()
+
+total_forecast_demand = selected_forecast[
+    "forecast_quantity"
+].sum()
+
+average_daily_demand = selected_forecast[
+    "forecast_quantity"
+].mean()
+
+peak_forecast_demand = selected_forecast[
+    "forecast_quantity"
+].max()
+
+
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.metric(
-        "Selected Store",
-        store
+        "Forecast Horizon",
+        f"{forecast_days} days"
     )
 
 with col2:
     st.metric(
-        "Selected Department",
-        category
+        "Total Forecast Demand",
+        f"{total_forecast_demand:.1f}"
     )
 
 with col3:
     st.metric(
-        "Selected Item",
-        item
+        "Average Daily Demand",
+        f"{average_daily_demand:.2f}"
     )
 
+with col4:
+    st.metric(
+        "Peak Daily Demand",
+        f"{peak_forecast_demand:.2f}"
+    )
 
 # ---------------------------------------------------------
 # Data status
