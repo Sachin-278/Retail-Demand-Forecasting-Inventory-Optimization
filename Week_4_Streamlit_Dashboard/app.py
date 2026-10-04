@@ -238,17 +238,40 @@ with col4:
         "Peak Daily Demand",
         f"{peak_forecast_demand:.2f}"
     )
-
 # ---------------------------------------------------------
-# Data status
+# Forecast status
 # ---------------------------------------------------------
 
 st.subheader("Forecast Status")
 
+forecast_start = selected_forecast["date"].min()
+forecast_end = selected_forecast["date"].max()
+forecast_days = selected_forecast["date"].nunique()
+
 st.success(
-    f"Loaded {len(forecast_data):,} future LightGBM forecast rows "
-    f"and {len(historical_data):,} historical validation rows from BigQuery."
+    f"LightGBM forecast loaded for {forecast_days} days "
+    f"from {forecast_start.date()} to {forecast_end.date()}."
 )
+
+status_col1, status_col2, status_col3 = st.columns(3)
+
+with status_col1:
+    st.metric(
+        "Forecast Start",
+        forecast_start.strftime("%d %b %Y")
+    )
+
+with status_col2:
+    st.metric(
+        "Forecast End",
+        forecast_end.strftime("%d %b %Y")
+    )
+
+with status_col3:
+    st.metric(
+        "Forecast Days",
+        forecast_days
+    )
 
 
 # ---------------------------------------------------------
