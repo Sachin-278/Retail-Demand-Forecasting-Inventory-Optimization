@@ -865,6 +865,12 @@ try:
             * (1 + price_change_pct / 100)
         )
 
+        if scenario_price <= 0:
+            st.error(
+                "The scenario price must be greater than zero."
+            )
+            st.stop()
+
         price_col1, price_col2, price_col3 = st.columns(3)
 
         with price_col1:
@@ -1034,12 +1040,24 @@ if st.button(
                 else:
 
                     demand_change_pct = 0
-
+                if demand_change > 0:
+                    demand_interpretation = (
+                        "Demand is expected to increase under this price scenario."
+                    )
+                elif demand_change < 0:
+                    demand_interpretation = (
+                        "Demand is expected to decrease under this price scenario."
+                    )
+                else:
+                    demand_interpretation = (
+                        "Demand is expected to remain unchanged under this price scenario."
+                    )
 
                 st.success(
                     "Price scenario calculated successfully."
                 )
 
+                st.info(demand_interpretation)
 
                 st.subheader(
                     "Scenario Results"
